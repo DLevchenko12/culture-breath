@@ -18,9 +18,9 @@ public interface AuthorizedUserService {
 
     void deleteAuthorizedUserById(UUID userId);
 
-    List<OrderDto> findAllUsersOrdersByUserId(UUID userId);
+    List<OrderDto> findUsersOrdersById(UUID userId);
 
-    OrderDto createOrder(OrderDto orderDto);
+    OrderDto createOrder(UUID userId, OrderDto orderDto);
 
     void deleteOrderById(UUID orderId);
 }

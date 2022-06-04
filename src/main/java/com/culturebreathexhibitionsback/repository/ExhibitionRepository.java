@@ -7,6 +7,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ExhibitionRepository extends JpaRepository<Exhibition, UUID> {
-
-    Optional<Exhibition> findExhibitionById(UUID exhibitionId);
+    Optional<Exhibition> findExhibitionByExhibitionTopic(String exhibitionTopic);
 }

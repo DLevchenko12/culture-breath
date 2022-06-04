@@ -1,6 +1,5 @@
 package com.culturebreathexhibitionsback.repository;
 
-import com.culturebreathexhibitionsback.dto.OrderDto;
 import com.culturebreathexhibitionsback.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 

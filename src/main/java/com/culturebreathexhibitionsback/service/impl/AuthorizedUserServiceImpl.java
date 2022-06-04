@@ -5,8 +5,8 @@ import com.culturebreathexhibitionsback.dto.OrderDto;
 import com.culturebreathexhibitionsback.dto.mapper.AuthorizedUserMapper;
 import com.culturebreathexhibitionsback.dto.mapper.OrderMapper;
 import com.culturebreathexhibitionsback.exception.ResourceNotFoundException;
+import com.culturebreathexhibitionsback.exception.UserAlreadyExistsException;
 import com.culturebreathexhibitionsback.model.AuthorizedUser;
-import com.culturebreathexhibitionsback.model.Order;
 import com.culturebreathexhibitionsback.repository.AuthorizedUserRepository;
 import com.culturebreathexhibitionsback.repository.OrderRepository;
 import com.culturebreathexhibitionsback.service.AuthorizedUserService;
@@ -25,6 +25,8 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
 
     private final AuthorizedUserMapper userMapper;
     private final AuthorizedUserRepository userRepository;
+
+    private final OrderServiceImpl orderService;
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
 
@@ -41,12 +43,17 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
     public AuthorizedUserDto findAuthorizedUserById(UUID userId) {
         return userRepository.findById(userId)
                 .map(userMapper::authorizedUserToAuthorizedUserDto)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("User with id: " + userId));
+                .orElseThrow(() -> {
+                    log.error("Exception was thrown during 'findAuthorizedUserById' operation");
+                    throw new ResourceNotFoundException("User with id: " + userId);
+                });
     }
 
     @Override
     public AuthorizedUserDto createAuthorizedUser(AuthorizedUserDto authorizedUserDto) {
+        if (userRepository.existsById(authorizedUserDto.getId())) {
+            throw new UserAlreadyExistsException(authorizedUserDto.getId());
+        }
         AuthorizedUser authorizedUser = userRepository.save(userMapper.authorizedUserDtoToAuthorizedUser(authorizedUserDto));
         return userMapper.authorizedUserToAuthorizedUserDto(authorizedUser);
     }
@@ -70,8 +77,8 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
     }
 
     @Override
-    public List<OrderDto> findAllUsersOrdersByUserId(UUID userId) {
-        if(!userRepository.existsById(userId)) {
+    public List<OrderDto> findUsersOrdersById(UUID userId) {
+        if (!userRepository.existsById(userId)) {
             log.error("Exception was thrown");
             throw new ResourceNotFoundException("User with id: " + userId);
         } else {
@@ -83,16 +90,16 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
     }
 
     @Override
-    public OrderDto createOrder(OrderDto orderDto) {
-        Order order = orderRepository.save(orderMapper.orderDtoToOrder(orderDto));
-        return orderMapper.orderToOrderDto(order);
+    public OrderDto createOrder(UUID userId, OrderDto orderDto) {
+        if (!userRepository.existsById(userId)) {
+            log.error("Exception was thrown");
+            throw new ResourceNotFoundException("User with id: " + userId);
+        }
+        return orderService.createOrder(orderDto);
     }
 
     @Override
     public void deleteOrderById(UUID orderId) {
-        orderRepository.findById(orderId).ifPresentOrElse(orderRepository::delete, () -> {
-            log.error("Exception thrown while deleting resource");
-            throw new ResourceNotFoundException("Order with id: " + orderId);
-        });
+        orderService.deleteOrderById(orderId);
     }
 }

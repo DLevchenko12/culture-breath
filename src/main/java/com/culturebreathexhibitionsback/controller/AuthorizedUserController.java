@@ -1,6 +1,8 @@
 package com.culturebreathexhibitionsback.controller;
 
 import com.culturebreathexhibitionsback.dto.AuthorizedUserDto;
+import com.culturebreathexhibitionsback.dto.OrderDto;
+import com.culturebreathexhibitionsback.model.AuthorizedUser;
 import com.culturebreathexhibitionsback.service.AuthorizedUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,11 @@ public class AuthorizedUserController {
         return authorizedUserService.getAllAuthorizedUsers();
     }
 
+    @GetMapping("/{userId}")
+    public AuthorizedUserDto getAuthorizedUserById(@PathVariable UUID userId) {
+        return authorizedUserService.findAuthorizedUserById(userId);
+    }
+
     @PostMapping
     public ResponseEntity<AuthorizedUserDto> createAuthorizedUser(@RequestBody AuthorizedUserDto userDto) {
         AuthorizedUserDto authorizedUserDto = authorizedUserService.createAuthorizedUser(userDto);
@@ -45,5 +52,20 @@ public class AuthorizedUserController {
         authorizedUserService.deleteAuthorizedUserById(userId);
     }
 
+    @GetMapping("/{userId}/orders")
+    public List<OrderDto> getUserOrdersById(@PathVariable UUID userId) {
+        return authorizedUserService.findUsersOrdersById(userId);
+    }
+
+    @PostMapping("/{userId}/orders")
+    public ResponseEntity<OrderDto> createOrder(@PathVariable UUID userId, @RequestBody OrderDto orderDto) {
+        OrderDto savedOrderDto = authorizedUserService.createOrder(userId, orderDto);
+        return ResponseEntity.ok(savedOrderDto);
+    }
+
+    @DeleteMapping("/{userId}/orders/{orderId}/cancel")
+    public void deleteOrderById(@PathVariable UUID userId, @PathVariable UUID orderId) {
+        authorizedUserService.deleteOrderById(orderId);
+    }
 
 }
