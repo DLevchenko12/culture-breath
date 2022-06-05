@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.math.BigDecimal;
@@ -41,6 +42,9 @@ public class Order {
     @Column(name = "order_price")
     private BigDecimal price;
 
+    @ManyToOne
+    @JoinColumn(name = "fk_user")
+    private AuthorizedUser user;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "orders_exhibitions",
             joinColumns = @JoinColumn(
@@ -50,6 +54,4 @@ public class Order {
                     foreignKey = @ForeignKey(name = "orders_exhibitions_exhibition_id_fk"))
     )
     private Set<Exhibition> exhibitions = new HashSet<>();
-
-
 }

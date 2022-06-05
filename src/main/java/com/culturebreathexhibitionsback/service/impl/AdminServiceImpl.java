@@ -41,12 +41,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AdminDto createAdmin(AdminDto adminDto) {
-        if (adminRepository.existsById(adminDto.getId())) {
-            throw new UserAlreadyExistsException(adminDto.getId());
-        }
         Admin admin = adminRepository.save(adminMapper.adminDtoToAdmin(adminDto));
         return adminMapper.adminToAdminDto(admin);
-
     }
 
     @Override

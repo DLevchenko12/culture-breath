@@ -2,7 +2,6 @@ package com.culturebreathexhibitionsback.controller;
 
 import com.culturebreathexhibitionsback.dto.AuthorizedUserDto;
 import com.culturebreathexhibitionsback.dto.OrderDto;
-import com.culturebreathexhibitionsback.model.AuthorizedUser;
 import com.culturebreathexhibitionsback.service.AuthorizedUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -53,8 +52,13 @@ public class AuthorizedUserController {
     }
 
     @GetMapping("/{userId}/orders")
-    public List<OrderDto> getUserOrdersById(@PathVariable UUID userId) {
+    public List<OrderDto> getUsersOrdersById(@PathVariable UUID userId) {
         return authorizedUserService.findUsersOrdersById(userId);
+    }
+
+    @GetMapping("/{userId}/orders/{orderId}")
+    public OrderDto getOrderById(@PathVariable UUID userId, @PathVariable UUID orderId) {
+        return authorizedUserService.getOrderById(orderId);
     }
 
     @PostMapping("/{userId}/orders")

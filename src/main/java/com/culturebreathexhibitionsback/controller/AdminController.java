@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +36,7 @@ public class AdminController {
     }
 
     @PostMapping
-    public ResponseEntity<AdminDto> createAdmin(@RequestBody AdminDto adminDto) {
+    public ResponseEntity<AdminDto> createAdmin(@RequestBody @Valid AdminDto adminDto) {
         AdminDto savedAdminDto = adminService.createAdmin(adminDto);
         return ResponseEntity.ok(savedAdminDto);
     }

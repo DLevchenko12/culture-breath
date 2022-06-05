@@ -25,10 +25,7 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
 
     private final AuthorizedUserMapper userMapper;
     private final AuthorizedUserRepository userRepository;
-
     private final OrderServiceImpl orderService;
-    private final OrderRepository orderRepository;
-    private final OrderMapper orderMapper;
 
 
     @Override
@@ -51,9 +48,6 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
 
     @Override
     public AuthorizedUserDto createAuthorizedUser(AuthorizedUserDto authorizedUserDto) {
-        if (userRepository.existsById(authorizedUserDto.getId())) {
-            throw new UserAlreadyExistsException(authorizedUserDto.getId());
-        }
         AuthorizedUser authorizedUser = userRepository.save(userMapper.authorizedUserDtoToAuthorizedUser(authorizedUserDto));
         return userMapper.authorizedUserToAuthorizedUserDto(authorizedUser);
     }
@@ -82,11 +76,13 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
             log.error("Exception was thrown");
             throw new ResourceNotFoundException("User with id: " + userId);
         } else {
-            return orderRepository.findUserOrdersById(userId)
-                    .stream()
-                    .map(orderMapper::orderToOrderDto)
-                    .collect(Collectors.toList());
+            return orderService.getAllUsersOrdersById(userId);
         }
+    }
+
+    @Override
+    public OrderDto getOrderById(UUID orderId) {
+        return orderService.getOrderById(orderId);
     }
 
     @Override

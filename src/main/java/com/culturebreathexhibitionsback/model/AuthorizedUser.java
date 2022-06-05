@@ -22,7 +22,6 @@ import java.util.List;
         foreignKey = @ForeignKey(name = "authorized_user_user_id_fk")
 )
 public class AuthorizedUser extends User {
-    @OneToMany
-    @JoinColumn(name = "authorized_user_fk")
+    @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 }

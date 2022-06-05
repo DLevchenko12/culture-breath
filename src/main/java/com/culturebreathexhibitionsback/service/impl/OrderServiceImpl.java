@@ -24,8 +24,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
 
     @Override
-    public List<OrderDto> getAllOrders() {
-        return orderRepository.findAll()
+    public List<OrderDto> getAllUsersOrdersById(UUID userId) {
+        return orderRepository.findAllByUserId(userId)
                 .stream()
                 .map(orderMapper::orderToOrderDto)
                 .collect(Collectors.toList());

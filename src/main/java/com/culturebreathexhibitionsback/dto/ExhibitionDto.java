@@ -4,15 +4,13 @@ import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Value
-public class ExhibitionDto implements Serializable {
+public class ExhibitionDto {
 
-    @NotNull
     UUID id;
 
     @NotBlank(message = "Exhibition name may not be blank")

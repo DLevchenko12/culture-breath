@@ -20,6 +20,8 @@ public interface AuthorizedUserService {
 
     List<OrderDto> findUsersOrdersById(UUID userId);
 
+    OrderDto getOrderById(UUID orderId);
+
     OrderDto createOrder(UUID userId, OrderDto orderDto);
 
     void deleteOrderById(UUID orderId);
