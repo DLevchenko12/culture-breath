@@ -1,5 +1,6 @@
 package com.culturebreathexhibitionsback.dto;
 
+import com.culturebreathexhibitionsback.model.Role;
 import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
@@ -16,6 +17,12 @@ public class AdminDto {
     @NotBlank(message = "Second name may not be blank")
     String secondName;
 
+    @NotBlank(message = "Role may not be blank")
+    Role role;
+
     @NotBlank(message = "Email may not be blank")
     String email;
+
+    @NotBlank(message = "Not blank")
+    String password;
 }
